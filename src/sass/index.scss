@@ -1,22 +1,5 @@
 @import './common';
-@import './example';
+@import './searchQuery'
 
 
 
-.gallery {
-    width: 1600px;
-    padding: 0 15px;
-    display: grid;
-    grid-template-columns: repeat(4, 370px);
-    gap: 30px;
-    margin: 0 auto;
-}
-
-.info {
-    height: 30px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5px;
-}

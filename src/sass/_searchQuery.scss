@@ -1,0 +1,57 @@
+.gallery {
+    display: grid;
+    max-width: 1140px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-auto-rows: 240px;
+    grid-gap: 12px;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.gallery__tumb {
+    display: block;
+    overflow: hidden;
+}
+
+.gallery__tumb img {
+    height: 100%;
+    width: 100%;
+}
+
+.photo-card {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info {
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 5px;
+}
+
+body {
+    position: relative;
+}
+
+.form-box {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100%;
+    z-index: 30;
+
+    background-color: blue;
+
+}

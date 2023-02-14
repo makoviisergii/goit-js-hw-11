@@ -96,37 +96,58 @@ gallery.on('show.simplelightbox', function () {
 
 const form = document.getElementById('search-form');
 const list = document.querySelector('.gallery');
+const guard = document.querySelector('.guard');
 
 const BASE_URL = 'https://pixabay.com/api/';
 
+let pageToFetch = 1;
+let queryToFetch = '';
+
 form.addEventListener('submit', onSubmit);
 
-async function onSubmit(e) {
-  e.preventDefault();
-  const request = e.target.elements.searchQuery.value.toLowerCase().trim();
+const observer = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        getImgArr(queryToFetch, pageToFetch);
+      }
+    });
+  },
+  { rootMargin: '200px' }
+);
 
-  const params = new URLSearchParams({
-    key: '33608636-10286b6eb715989d3ae9c7763',
-    q: `${request}`,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: true,
-  });
-  const imgRequest = await axios.get(`${BASE_URL}?${params}`);
-  const imgObj = imgRequest.data;
-  console.log(imgObj);
-  return getImgArr(imgObj);
+async function fetchImgRequest(request, page) {
+  try {
+    const params = new URLSearchParams({
+      key: '33608636-10286b6eb715989d3ae9c7763',
+      q: `${request}`,
+      page: `${page}`,
+      per_page: '40',
+      image_type: 'photo',
+      orientation: 'horizontal',
+      safesearch: true,
+    });
+    const imgRequest = await axios.get(`${BASE_URL}?${params}`);
+
+    return imgRequest.data;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-function getImgArr(imgObj) {
-  if (imgObj !== []) {
-    const imgArr = imgObj.hits;
-    console.log(imgArr);
-    return renderCard(imgArr);
+async function getImgArr(query, page) {
+  const imgObj = await fetchImgRequest(query, page);
+  const imgArr = imgObj.hits;
+  console.log(imgArr);
+  if (imgArr.length === 0) {
+    return alert(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
   }
-  consol.log(
-    'Sorry, there are no images matching your search query. Please try again.'
-  );
+  renderCard(imgArr);
+  pageToFetch += 1;
+  console.log(pageToFetch);
+  observer.observe(guard);
 }
 
 function renderCard(imgArr) {
@@ -141,25 +162,38 @@ function renderCard(imgArr) {
         comments,
         downloads,
       }) => {
-        return `<a href ="${largeImageURL}"><div class="photo-card">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+        return `<a href ="${largeImageURL}"><div class="photo-card"><div class ="gallery__tumb"><img src="${webformatURL}" alt="${tags}" loading="lazy" /></div>
   <div class="info">
     <p class="info-item">
-      <b>${likes}</b>
-    </p>
+      <b>Likes</b>
+    ${likes}</p>
     <p class="info-item">
-      <b>${views}</b>
-    </p>
+      <b>Views</b>
+    ${views}</p>
     <p class="info-item">
-      <b>${comments}</b>
-    </p>
+      <b>Comments</b>
+    ${comments}</p>
     <p class="info-item">
-      <b>${downloads}</b>
-    </p>
-  </div>
+      <b>Downloads</b>
+    ${downloads}</p>
+     </div>
 </div></a>`;
       }
     )
     .join('');
+
   list.insertAdjacentHTML('beforeend', markup);
+}
+
+function onSubmit(e) {
+  e.preventDefault();
+  const request = e.target.elements.searchQuery.value.toLowerCase().trim();
+  if (!request || queryToFetch === request) {
+    return;
+  }
+  queryToFetch = request;
+  pageToFetch = 1;
+  list.innerHTML = '';
+  getImgArr(queryToFetch, pageToFetch);
+  form.reset();
 }
