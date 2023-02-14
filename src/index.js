@@ -83,16 +83,12 @@
 // =======Your API key: 33608636-10286b6eb715989d3ae9c7763=======
 
 // =====================form======================
+
 import SimpleLightbox from 'simplelightbox';
 
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 import axios from 'axios';
-
-let gallery = new SimpleLightbox('.gallery a');
-gallery.on('show.simplelightbox', function () {
-  // do something…
-});
 
 const form = document.getElementById('search-form');
 const list = document.querySelector('.gallery');
@@ -162,22 +158,30 @@ function renderCard(imgArr) {
         comments,
         downloads,
       }) => {
-        return `<a href ="${largeImageURL}"><div class="photo-card"><div class ="gallery__tumb"><img src="${webformatURL}" alt="${tags}" loading="lazy" /></div>
-  <div class="info">
-    <p class="info-item">
-      <b>Likes</b>
-    ${likes}</p>
-    <p class="info-item">
-      <b>Views</b>
-    ${views}</p>
-    <p class="info-item">
-      <b>Comments</b>
-    ${comments}</p>
-    <p class="info-item">
-      <b>Downloads</b>
-    ${downloads}</p>
-     </div>
-</div></a>`;
+        return `<a class="gallery__item" href ="${largeImageURL}">
+    <div class="photo-card">
+        <img  class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
+        
+            <div class="info">
+            <p class="info-item">
+                <b>Likes</b>
+                    ${likes}
+            </p>
+            <p class="info-item">
+                <b>Views</b>
+                    ${views}
+            </p>
+            <p class="info-item">
+                <b>Comments</b>
+                    ${comments}
+            </p>
+            <p class="info-item">
+                <b>Downloads</b>
+                    ${downloads}
+                    </p>
+            </div>
+        </div>
+        </a>`;
       }
     )
     .join('');
@@ -197,3 +201,8 @@ function onSubmit(e) {
   getImgArr(queryToFetch, pageToFetch);
   form.reset();
 }
+new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+});
