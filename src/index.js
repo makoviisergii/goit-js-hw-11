@@ -79,7 +79,7 @@ function renderCard(imgArr) {
         comments,
         downloads,
       }) => {
-        return `<div class="photo-card"><a class="gallery__link"  href ="${largeImageURL} " >
+        return `<div class="photo-card"><a class="gallery__link"  href="${largeImageURL}" >
         <img  class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" /></a>
         
             <div class="info">
@@ -121,4 +121,3 @@ function onSubmit(e) {
   getImgArr(queryToFetch, pageToFetch);
   form.reset();
 }
-console.log(SimpleLightbox);
