@@ -50,7 +50,6 @@ async function fetchImgRequest(request, page) {
 async function getImgArr(query, page) {
   const imgObj = await fetchImgRequest(query, page);
   const imgArr = imgObj.hits;
-  console.log(imgArr);
   if (imgArr.length === 0) {
     return Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
@@ -63,7 +62,6 @@ async function getImgArr(query, page) {
 
   pageToFetch += 1;
 
-  console.log(pageToFetch);
   observer.observe(guard);
 }
 
@@ -99,7 +97,6 @@ function renderCard(imgArr) {
                 <b>Downloads</b>
                     ${downloads}
                     </p>
-           
             </div>
         </div>`;
       }
