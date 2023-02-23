@@ -14,6 +14,7 @@ const BASE_URL = 'https://pixabay.com/api/';
 
 let pageToFetch = 1;
 let queryToFetch = '';
+let totalPages = 1;
 
 form.addEventListener('submit', onSubmit);
 
@@ -40,7 +41,6 @@ async function fetchImgRequest(request, page) {
       safesearch: true,
     });
     const imgRequest = await axios.get(`${BASE_URL}?${params}`);
-    console.log(imgRequest);
     return imgRequest.data;
   } catch (error) {
     console.log(error);
@@ -50,20 +50,24 @@ async function fetchImgRequest(request, page) {
 async function getImgArr(query, page) {
   const imgObj = await fetchImgRequest(query, page);
   const imgArr = await imgObj.hits;
-  const totalPages = Math.ceil(imgObj.totalHits / 40);
+  totalPages = Math.ceil(imgObj.totalHits / 40);
 
   if (imgArr.length === 0) {
     return Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
   }
+
   renderCard(imgArr);
 
   const lightbox = new SimpleLightbox('.gallery a');
+
   lightbox.refresh();
 
-  if (page > totalPages) {
-    return Notify.warning(
+  if (page >= totalPages) {
+    observer.unobserve(guard);
+
+    return Notiflix.Notify.warning(
       "We're sorry, but you've reached the end of search results."
     );
   }
